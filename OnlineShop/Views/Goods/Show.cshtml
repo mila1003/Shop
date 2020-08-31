@@ -1,0 +1,142 @@
+﻿<link rel="stylesheet" href="~/css/ShowGoods.css" />
+<div>
+    <div id="filtration">
+        <form method="POST">
+            <div id="filtration-inner">
+                <input type="hidden" name="search" value="@ViewBag.Search" />
+                <input type="hidden" name="id" value="@ViewBag.SubcategoryId" />
+                <input type="hidden" name="page" value="1" />
+                <div>
+                    <table>
+                        <tr>
+                            <td colspan="2">
+                                @if (ViewBag.HasDiscount == "true")
+                                {
+                                    <input checked value="true" name="hasDiscount" type="checkbox"> <span>Цена со скидкой</span>
+                                }
+                                else
+                                {
+                                    <input value="true" name="hasDiscount" type="checkbox"> <span>Цена со скидкой</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="number" min="0" max="100" name="fromDiscount" value="@ViewBag.fromDiscount" placeholder="Процент скидки от" />
+                            </td>
+                            <td>
+                                <input type="number" min="0" max="100" step="1" name="toDiscount" value="@ViewBag.toDiscount" placeholder="Процент скидки до" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <table>
+                        <tr>
+                            @if (ViewBag.Sort == "down")
+                            {
+                                <td><input value="down" name="sort" type="radio" checked>Цена по убыванию</td>
+                                <td><input value="up" name="sort" type="radio">Цена по возврастанию</td>
+                            }
+                            else
+                          if (ViewBag.Sort == "up")
+                            {
+                                <td><input value="down" name="sort" type="radio">Цена по убыванию</td>
+                                <td><input value="up" name="sort" type="radio" checked>Цена по возврастанию</td>
+                            }
+                            else
+                            {
+                                <td><input value="down" name="sort" type="radio">Цена по убыванию</td>
+                                <td><input value="up" name="sort" type="radio">Цена по возврастанию</td>
+                            }
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <input min="0" name="fromPrice" value="@ViewBag.fromPrice" placeholder="Цена от" />
+                            </td>
+                            <td>
+                                <input min="0" name="toPrice" value="@ViewBag.toPrice" placeholder="Цена до" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <button type="submit">Принять</button>
+                <a href="Show?subcategoryId=@ViewBag.SubcategoryId&page=1"><input type="button" value="Отмена"/></a>
+            </div>
+        </form>
+    </div>
+    <table>
+        @for (int i = 0; i < ViewBag.Goods.Count; i++)
+        {
+            if (i % 2 == 0)@Html.Raw("<tr>");
+            <td>
+                <div class="good">
+                    <div class="good-image">
+                        @Html.Raw("<img src=\"data:image/jpeg;base64," + Convert.ToBase64String(ViewBag.Goods[i].Image) + "\" />")
+                    </div>
+                    <div class="good-discription">
+                        <div><span><b>@ViewBag.Goods[i].Name</b></span></div>
+                        <span>Ед.изм: @ViewBag.Goods[i].Unit</span><div>
+                            <div>
+                                @if (ViewBag.Goods[i].Discount == 0)
+                                {
+                                    <span>Цена<b> @ViewBag.Goods[i].Price</b> (бел. руб.)</span>
+                                }
+                                else
+                                {
+                                    <span class="good-discount-priceOLd">Цена <b><s>@ViewBag.Goods[i].Price</s> </b></span>
+                                    <span class="good-discount-priceNew"><b> @Math.Round(@ViewBag.Goods[i].Price - ((@ViewBag.Goods[i].Price * @ViewBag.Goods[i].Discount) / 100), 2)</b>(бел.руб.)</span>
+                                }
+                            </div>
+                            <div><span>В наличии: @ViewBag.Goods[i].CountInStorage</span></div>
+                            <div class="good-buy">
+                                <form action="~/Shop/AddToCart" method="POST">
+                                    <input type="hidden" name="id" value="@ViewBag.Goods[i].Id" />
+                                    <input class="required-count" min="0" max="@ViewBag.Goods[i].CountInStorage" name="count" type="number" required />
+                                    <button type="submit" class="good-to-cart">В корзину</button>
+                                    <a href="~/Goods/MoreInfo/@ViewBag.Goods[i].Id"><input type="button" class="good-more-info" value="Подробнее" /></a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            if (i % 2 != 0 || i == ViewBag.Goods.Count - 1)
+                @Html.Raw("</tr>");
+            }
+    </table>
+
+
+    <div class="foot">
+        Стр @(ViewBag.countPages < ViewBag.Page ? 0 : ViewBag.Page) из @ViewBag.countPages
+
+        @if (ViewBag.Page > 1)
+        {
+            @Html.ActionLink("<<", "Show", new { page = 1, SubcategoryId = ViewBag.SubcategoryId, search = ViewBag.Search, HasDiscount= ViewBag.HasDiscount, fromDiscount= ViewBag.fromDiscount, toDiscount= ViewBag.toDiscount, Sort= ViewBag.Sort, fromPrice= ViewBag.fromPrice, toPrice= ViewBag.toPrice })
+            @Html.Raw(" ");
+            @Html.ActionLink("< Пред.", "Show", new { page = ViewBag.Page - 1, SubcategoryId = ViewBag.SubcategoryId, search = ViewBag.Search, HasDiscount = ViewBag.HasDiscount, fromDiscount = ViewBag.fromDiscount, toDiscount = ViewBag.toDiscount, Sort = ViewBag.Sort, fromPrice = ViewBag.fromPrice, toPrice = ViewBag.toPrice })
+        }
+        else
+        {
+            @:<<
+            @Html.Raw(" ");
+            @:< Пред.
+        }
+
+        @if (ViewBag.Page < ViewBag.countPages)
+        {
+            @Html.ActionLink("След. >", "Show", new { page = ViewBag.Page + 1, SubcategoryId = ViewBag.SubcategoryId, search = ViewBag.Search, HasDiscount = ViewBag.HasDiscount, fromDiscount = ViewBag.fromDiscount, toDiscount = ViewBag.toDiscount, Sort = ViewBag.Sort, fromPrice = ViewBag.fromPrice, toPrice = ViewBag.toPrice })
+            @Html.Raw(" ");
+            @Html.ActionLink(">>", "Show", new { page = @ViewBag.countPages, SubcategoryId = ViewBag.SubcategoryId, search = ViewBag.Search, HasDiscount = ViewBag.HasDiscount, fromDiscount = ViewBag.fromDiscount, toDiscount = ViewBag.toDiscount, Sort = ViewBag.Sort, fromPrice = ViewBag.fromPrice, toPrice = ViewBag.toPrice })
+        }
+        else
+        {
+            @:След. >
+            @Html.Raw(" ")
+            @:>>
+        }
+    </div>
+</div>

@@ -1,0 +1,59 @@
+﻿<link rel="stylesheet" href="~/css/ShoppingCart.css"/>
+<script tyle="text/javascript" src="~/js/MakeOrder.js">
+</script>
+<div id="cart">
+    <table>
+        <tr>
+            <th style="width: 10px;">
+                Оформить
+            </th>
+            <th>
+                Товар
+            </th>
+            <th>
+                Цена за единицу
+            </th>
+            <th>
+                Кол-во
+            </th>
+            <th>
+                Скидка,%
+            </th>
+            <th></th>
+        </tr>
+        @foreach (var item in ViewBag.CartItems)
+        {
+            <tr>
+                <td>
+                    <input class="cart-checkbox" onclick="InOrder()" type="checkbox" value="@item.ItemId" />
+                </td>
+                <td>
+                    <a href="~/Goods/MoreInfo/@item.GoodId">@item.Good.Name</a>
+                </td>
+                <td>
+                    @item.Good.Price
+                </td>
+                <td>
+                    @item.Count
+                </td>
+                <td>
+                    @item.Good.Discount
+                </td>
+                <td>
+                    @Html.ActionLink("Удалить", "RemoveFromCart", "Shop", new { id = item.ItemId }, "")
+                </td>
+            </tr>
+        }
+        <tr>
+            <td>
+                <input type="hidden" name="InOrder" id="InOrder" />
+                <b>Сумма по корзине:</b>
+            </td>
+
+            <td>
+                @ViewBag.sumCart
+            </td>
+        </tr>
+    </table>
+    <div> <a id="linkorder" href=""><input type="button" class="cart-button" value="Оформить заказ"></a></div>
+</div>
