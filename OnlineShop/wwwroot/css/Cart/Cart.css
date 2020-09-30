@@ -15,12 +15,45 @@
     text-align: left;
 }
 
-#cart .good-in-cart {
-    color: #808080;
+    #cart .good-in-cart {
+        color: #808080;
+    }
+
+    #cart .delete-from-cart a {
+        color: #c3213c;
+    }
+
+#sent-to-email form {
+    display: grid;
+    justify-content: center;
 }
 
-#cart .delete-from-cart a{
+#sent-to-email h2 {
+    color: #c3213c;
+    font-size: 1em;
+    text-align: center;
+    margin: 0.5em;
+}
+
+#sent-to-email input {
+    font-size: 1em;
+    margin: 0.3em;
+}
+
+#sent-to-email span {
+    font-size: 1.3em;
     color: #c3213c;
 }
 
+#sent-to-email button {
+    width: 100%;
+    height: 2em;
+    margin: 5% 0;
+    background: #c3213c;
+    color: #fff;
+}
 
+    #sent-to-email button:hover {
+        background: #f3dde1;
+        color: #c3213c;
+    }

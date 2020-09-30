@@ -174,7 +174,7 @@
         {
             @Html.ActionLink("След. >", "Show", new { page = ViewBag.Page + 1, SubcategoryId = ViewBag.SubcategoryId, search = ViewBag.Search, HasDiscount = ViewBag.HasDiscount, fromDiscount = ViewBag.fromDiscount, toDiscount = ViewBag.toDiscount, Sort = ViewBag.Sort, fromPrice = ViewBag.fromPrice, toPrice = ViewBag.toPrice })
             @Html.Raw(" ");
-            @Html.ActionLink(">>", "Show", new { page = @ViewBag.countPages, SubcategoryId = ViewBag.SubcategoryId, search = ViewBag.Search, HasDiscount = ViewBag.HasDiscount, fromDiscount = ViewBag.fromDiscount, toDiscount = ViewBag.toDiscount, Sort = ViewBag.Sort, fromPrice = ViewBag.fromPrice, toPrice = ViewBag.toPrice })
+            @Html.ActionLink(">>", "Show", new { page = ViewBag.countPages, SubcategoryId = ViewBag.SubcategoryId, search = ViewBag.Search, HasDiscount = ViewBag.HasDiscount, fromDiscount = ViewBag.fromDiscount, toDiscount = ViewBag.toDiscount, Sort = ViewBag.Sort, fromPrice = ViewBag.fromPrice, toPrice = ViewBag.toPrice })
         }
         else
         {

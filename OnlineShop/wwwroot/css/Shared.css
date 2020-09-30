@@ -49,10 +49,14 @@ header #shedule {
     color: #fff;
 }
 
-/*    #site-logo-nav #nav:hover {
-        background: #f3dde1;
-        color: #c3213c;
-    }*/
+    #site-logo-nav #nav div:hover {
+        color: #f3dde1;
+    }
+
+    #site-logo-nav #nav a {
+        text-decoration: none;
+        color:#fff;
+    }
 
 /*search*/
 #site-search {
@@ -86,10 +90,10 @@ header #shedule {
         color: #fff;
     }
 
-    #site-search button:hover{
-        background: #f3dde1;
-        color: #c3213c;
-    }
+        #site-search button:hover {
+            background: #f3dde1;
+            color: #c3213c;
+        }
 
 @media screen and (max-width: 1000px) {
     #site-search button {
@@ -226,7 +230,7 @@ details summary::-webkit-details-marker {
     display: flex;
     justify-content: space-around;
     padding-top: 2%;
-    text-align:center;
+    text-align: center;
 }
 
 footer .footer-header {

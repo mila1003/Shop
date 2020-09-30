@@ -11,7 +11,7 @@
     <header>
         <div id="site-logo-nav">
             <div id="logo">
-                <img src="/images/logo.png">
+                <a href="Goods/Index"><img src="/images/logo.png"></a>
             </div>
             <div>
                 <div id="shedule">
@@ -19,7 +19,7 @@
                     <div>Воскресенье - выходной</div>
                 </div>
                 <div id="nav">
-                    <a><div>Главная</div></a>
+                    <a href="Goods/Index"><div>Главная</div></a>
                     <a><div>О нас</div></a>
                     <a><div>Контакты</div></a>
                 </div>
@@ -32,9 +32,9 @@
                     +375(29)111-11-11
                 </div>
                 <div id="search">
-                    <form method="get">
-                        <input name="search" placeholder="Найти...">
-                        <button button="" type="submit">GO</button>
+                    <form action="~/Goods/Index" method="get">
+                        <input name="search" value="@ViewBag.Search" placeholder="Найти...">
+                        <button type="submit">GO</button>
                     </form>
                 </div>
             </div>

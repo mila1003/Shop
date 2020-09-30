@@ -2,19 +2,33 @@
 <div id="sent-to-email">
     <h2>Заполните все поля для оформления заказа</h2>
     <form action="SendToEmail" method="POST">
-        <span>*</span><input class="input" maxlength="30" type="text" name="Surname" placeholder="Фамилия" required><br>
-        <span>*</span><input class="input" maxlength="30" type="text" name="Name" placeholder="Имя" required><br>
-        <span>*</span><input class="input" maxlength="30" type="text" name="SecondName" placeholder="Отчество" required><br>
+        <div>
+            <span>*</span><input class="input" maxlength="30" type="text" name="Surname" placeholder="Фамилия" required><br>
+        </div>
+        <div>
+            <span>*</span><input class="input" maxlength="30" type="text" name="Name" placeholder="Имя" required><br>
+        </div>
+        <div>
+            <span>*</span><input class="input" maxlength="30" type="text" name="SecondName" placeholder="Отчество" required><br>
+        </div>    
+
         <div>Пример:375(xx)xxx-xx-xx</div>
-        <span>*</span><input class="input" type="tel" name="Tel" required pattern="375\([0-9]{2}\)[0-9]{3}-[0-9]{2}-[0-9]{2}" placeholder="375(__)___-__-__"><br>
+        <div>
+            <span>*</span><input class="input" type="tel" name="Tel" required pattern="375\([0-9]{2}\)[0-9]{3}-[0-9]{2}-[0-9]{2}" placeholder="375(__)___-__-__"><br>
+        </div> 
+        <div>
         <span>*</span><input class="input" type="email" name="Email" placeholder="Почта" required><br>
+        </div>
+        <div>
         <span>*</span><input class="input" maxlength="50" type="text" name="Address" placeholder="Адрес доставки" required><br>
-        
-        <div class="Delivertext">Тип доставки:</div>
-        <input type="radio" name="deliver" value="yourself" checked>Самовывоз<br>
-        <input type="radio" name="deliver" value="car">Доставка по адресу<br>
-        <div>Сумма к оплате: <b> @ViewBag.InOrderSum </b></div>
-        <input type="hidden" value="@ViewBag.InOrder" name="InOrder"/>
-        <button class="cart-button" type="submit">Отправить</button>
+        </div>
+            <div class="Delivertext">Тип доставки:</div>
+        <div>
+            <input type="radio" name="deliver" value="yourself" checked>Самовывоз<br>
+            <input type="radio" name="deliver" value="car">Доставка по адресу<br>
+        </div>
+            <div>Сумма к оплате: <b> @ViewBag.InOrderSum </b></div>
+            <input type="hidden" value="@ViewBag.InOrder" name="InOrder" />
+            <button class="cart-button" type="submit">Отправить</button>
     </form>
 </div>

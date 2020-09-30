@@ -21,7 +21,7 @@ namespace OnlineShop.Controllers
             _context = context;
         }
 
-        public async Task<ActionResult> Index(int page)
+        public async Task<ActionResult> Index(int page, string search)
         {
             ViewBag.DiscountGoods = await _context.goods.Where(g => g.Discount != 0).ToListAsync();
             ViewBag.Categories = await _context.categories.Include(c => c.subcategories).ToListAsync();
@@ -31,10 +31,21 @@ namespace OnlineShop.Controllers
             ViewBag.CartSum = cart.GetTotalCartSum();
 
             ViewBag.Page = page;
-            ViewBag.countPages = Math.Ceiling(Convert.ToDouble(await _context.goods.CountAsync()) / pageSizeBanner);
-            ViewBag.Goods = await _context.goods.Skip((page - 1) * pageSizeBanner)
-                                                 .Take(pageSizeBanner)
-                                                 .ToListAsync();
+            if (search != "" && search != null)
+            {
+                List<Good> goods = await _context.goods.Where(g => g.Name.Contains(search)).ToListAsync();
+                ViewBag.countPages = Math.Ceiling(Convert.ToDouble(goods.Count()) / pageSizeBanner);
+                ViewBag.Goods = goods.Skip((page - 1) * pageSizeBanner)
+                                                     .Take(pageSizeBanner).ToList();
+                ViewBag.Search = search;
+            }
+            else 
+            {
+                ViewBag.countPages = Math.Ceiling(Convert.ToDouble(await _context.goods.CountAsync()) / pageSizeBanner);
+                ViewBag.Goods = await _context.goods.Skip((page - 1) * pageSizeBanner)
+                                                     .Take(pageSizeBanner)
+                                                     .ToListAsync(); 
+            }
 
             return View();
         }

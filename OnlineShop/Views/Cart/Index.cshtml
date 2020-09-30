@@ -40,7 +40,7 @@
                     @item.Good.Discount
                 </td>
                 <td class="delete-from-cart">
-                    @Html.ActionLink("Удалить", "RemoveFromCart", "Shop", new { id = item.ItemId }, "")
+                    @Html.ActionLink("Удалить", "Remove", "Cart", new { id = item.ItemId }, "")
                 </td>
             </tr>
         }

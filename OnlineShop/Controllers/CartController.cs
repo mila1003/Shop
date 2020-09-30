@@ -83,7 +83,7 @@ namespace OnlineShop.Controllers
             }
         }
 
-        public async Task<ActionResult> RemoveFromCart(string id)
+        public async Task<ActionResult> Remove(string id)
         {
             ShoppingCartId = GetCartId();
             var cartItem =  await _context.shoppingCartItems.SingleOrDefaultAsync(
@@ -103,62 +103,62 @@ namespace OnlineShop.Controllers
                                         string Surname, string Name, string SecondName, 
                                         string Tel, string Email, string Address, string Deliver)
         {
-            string emailFrom = "";
-            string emailTo = "";
-            var senderEmail = new MailAddress(emailFrom);
-            var receiverEmail = new MailAddress(emailTo);
-            var emailPassword = "";
+            //string emailFrom = "";
+            //string emailTo = "";
+            //var senderEmail = new MailAddress(emailFrom);
+            //var receiverEmail = new MailAddress(emailTo);
+            //var emailPassword = "";
 
-            var sub = "Новый заказ";
-            var body = $"Оформлен заказ от {DateTime.Now} на имя: {Surname} {Name} {SecondName} \n" +
-                       $"Состав заказа: \n";
+            //var sub = "Новый заказ";
+            //var body = $"Оформлен заказ от {DateTime.Now} на имя: {Surname} {Name} {SecondName} \n" +
+            //           $"Состав заказа: \n";
 
-            //Get all goods from the cart
-            ShoppingCartId = GetCartId(); 
-            var cart = await _context.shoppingCartItems.Where(
-                c => c.CartId == ShoppingCartId).Include(i => i.Good).ToListAsync();
+            ////Get all goods from the cart
+            //ShoppingCartId = GetCartId();
+            //var cart = await _context.shoppingCartItems.Where(
+            //    c => c.CartId == ShoppingCartId).Include(i => i.Good).ToListAsync();
 
-            double totalsum = 0;
-            string[] ItemsToOrder = InOrder.Split('?');
-            foreach (var x in cart)
-            {
-                for (int i = 0; i < ItemsToOrder.Length; i++)
-                {
-                    //if the good is selected to buy then include the good the the order
-                    if (x.ItemId == ItemsToOrder[i])
-                    {
-                        _context.shoppingCartItems.Remove(x);
-                        await _context.SaveChangesAsync();
-                            totalsum += Math.Round(x.Count * (x.Good.Price - ((x.Good.Price * x.Good.Discount) / 100)), 2);
-                            body += $"Товар: {x.Good.Name} Кол-во: {x.Count} Цена: {x.Good.Price} Скидка: {x.Good.Discount} \n";
-                    }
-                }
-            }
+            //double totalsum = 0;
+            //string[] ItemsToOrder = InOrder.Split('?');
+            //foreach (var x in cart)
+            //{
+            //    for (int i = 0; i < ItemsToOrder.Length; i++)
+            //    {
+            //        //if the good is selected to buy then include the good the the order
+            //        if (x.ItemId == ItemsToOrder[i])
+            //        {
+            //            _context.shoppingCartItems.Remove(x);
+            //            await _context.SaveChangesAsync();
+            //            totalsum += Math.Round(x.Count * (x.Good.Price - ((x.Good.Price * x.Good.Discount) / 100)), 2);
+            //            body += $"Товар: {x.Good.Name} Кол-во: {x.Count} Цена: {x.Good.Price} Скидка: {x.Good.Discount} \n";
+            //        }
+            //    }
+            //}
 
-            Deliver = Deliver == "car" ? "доставка" : "самовывоз";
-            body += $"Общая сумма заказа: {Math.Round(totalsum, 2)} \n" +
-                    $"Контакты заказика: почта {Email}, телефон {Tel} \n" +
-                    $"Место доставки {Address}. Тип доставки: {Deliver}";
+            //Deliver = Deliver == "car" ? "доставка" : "самовывоз";
+            //body += $"Общая сумма заказа: {Math.Round(totalsum, 2)} \n" +
+            //        $"Контакты заказика: почта {Email}, телефон {Tel} \n" +
+            //        $"Место доставки {Address}. Тип доставки: {Deliver}";
 
-            var smtp = new SmtpClient
-            {
-                Host = "smtp.mail.ru",
-                Port = 587,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(senderEmail.Address, emailPassword)
-            };
-            using (var mess = new MailMessage(senderEmail, receiverEmail)
-            {
-                Subject = sub,
-                Body = body
-            })
-            {
-                smtp.Send(mess);
-            }
+            //var smtp = new SmtpClient
+            //{
+            //    Host = "smtp.mail.ru",
+            //    Port = 587,
+            //    EnableSsl = true,
+            //    DeliveryMethod = SmtpDeliveryMethod.Network,
+            //    UseDefaultCredentials = false,
+            //    Credentials = new NetworkCredential(senderEmail.Address, emailPassword)
+            //};
+            //using (var mess = new MailMessage(senderEmail, receiverEmail)
+            //{
+            //    Subject = sub,
+            //    Body = body
+            //})
+            //{
+            //    smtp.Send(mess);
+            //}
 
-            //TotalCartSum = GetTotalCartSum();
+            ViewBag.Categories = await _context.categories.Include(c => c.subcategories).ToListAsync();
             ViewBag.CartSum = GetTotalCartSum();
             return View();
         }
@@ -166,8 +166,28 @@ namespace OnlineShop.Controllers
         //To get selected goods from the cart
         public async Task<ActionResult> MakeOrder(string InOrder)
         {
+            string[] ItemsToOrder = InOrder.Split('?');
+            double sumInOrder = 0;
+            ShoppingCartId = GetCartId();
+            var cart = await _context.shoppingCartItems
+                .Where(c => c.CartId == ShoppingCartId)
+                .Include(i => i.Good).ToListAsync();
+            foreach (var x in cart)
+            {
+                for (int i = 0; i < ItemsToOrder.Length; i++)
+                {
+                    //if the good is selected to buy then include the good the the order
+                    if (x.ItemId == ItemsToOrder[i])
+                    {
+                        await _context.SaveChangesAsync();
+                        sumInOrder += Math.Round(x.Count * (x.Good.Price - ((x.Good.Price * x.Good.Discount) / 100)), 2);
+                    }
+                }
+            }
+
             ViewBag.Categories = await _context.categories.Include(c => c.subcategories).ToListAsync();
             ViewBag.InOrder = InOrder;
+            ViewBag.InOrderSum = sumInOrder;
             ViewBag.CartSum = GetTotalCartSum();
             return View();
         }
