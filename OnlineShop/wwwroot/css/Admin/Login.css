@@ -1,0 +1,44 @@
+﻿#container {
+    width: 30%;
+    margin-left: auto;
+    margin-right: auto;
+    background: #FFF;
+    font-family: Arial;
+}
+
+a{
+    color:#fff;
+}
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+* {
+    font-family: Arial;
+    margin: 0;
+    padding: 0;
+}
+
+h2{
+    padding-bottom:30px;
+}
+p{
+    color: red;
+}
+
+#login-panel {
+    padding: 20px;
+    text-align: center;
+    margin-top: 20%;
+    border-radius: 10%;
+    box-shadow: inset 0px 0px 20px 4px rgba(0,0,0, .2);
+}
+.btn.btn-outline-dark {
+    margin-top: 5%;
+    width:65%;
+    background: #000;
+    color: #FFF;
+    border-radius: 10%;
+    box-shadow: 0px 0px 16px 6px rgba(0,0,0, .2);
+}

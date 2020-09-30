@@ -1,0 +1,107 @@
+﻿<link rel="stylesheet" type="text/css" href="~/css/Goods/Banner.css">
+<link rel="stylesheet" type="text/css" href="~/css/Goods/Slider.css">
+<link rel="stylesheet" type="text/css" href="~/css/Goods/Good.css">
+<script tyle="text/javascript" src="/js/SliderJQ.js"></script>
+<script tyle="text/javascript" src="/js/Slider.js"></script>
+    <div id="banner">
+        <div id="slider-wrap">
+            <div id="slider">
+                @foreach (IShop.Models.Good good in ViewBag.DiscountGoods)
+                {
+                    <div class="slide">
+                        <div class="inner">
+                            <div class="image">
+                                @Html.Raw("<img src=\"data:image/jpeg;base64," + Convert.ToBase64String(good.Image) + "\" />")
+                            </div>
+                            <div class="discription">
+                                <div class="discount">@good.Discount%</div>
+                                <div class="price">
+                                    <div class="name"><a href="~/Goods/MoreInfo?Id=@good.Id">@good.Name</a></div>
+                                    <div class="price-with-discount"><span><s>@good.Price</s></span><b>@Math.Round(good.Price - ((good.Price * good.Discount) / 100), 2)</b></div>
+                                    <div class="unit">руб./@good.Unit</div>
+                                </div>
+                                <div class="to-cart"><u><b><a href="Cart/Add?id=@good.Id&count=1">В корзину</a></b></u></div>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div id="goods">
+        <table>
+            @{ int tr = 0;
+            @for (int i = 0; i < ViewBag.Goods.Count; i++)
+            {
+
+                @if (i % 4 == 0)
+                {@Html.Raw("<tr>"); tr = i; };
+                 <td>
+                    <div class="good">
+                        <div class="good-image">
+                            @Html.Raw("<img src=\"data:image/jpeg;base64," + Convert.ToBase64String(ViewBag.Goods[i].Image) + "\" />")
+                        </div>
+                        <div class="good-discription">
+                            <div><span><b><a href="~/Goods/MoreInfo?Id=@ViewBag.Goods[i].Id">@ViewBag.Goods[i].Name</a></b></span></div>
+                            <span>Ед.изм: @ViewBag.Goods[i].Unit</span><div>
+                                <div>
+                                    @if (ViewBag.Goods[i].Discount == 0)
+                                    {
+                                        <span>Цена<b> @ViewBag.Goods[i].Price</b> (бел. руб.)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="good-discount-priceOLd">Цена <b><s>@ViewBag.Goods[i].Price</s> </b></span>
+                                        <span class="good-discount-priceNew"><b> @Math.Round(@ViewBag.Goods[i].Price - ((@ViewBag.Goods[i].Price * @ViewBag.Goods[i].Discount) / 100), 2)</b>(бел.руб.)</span>
+                                    }
+                                </div>
+                                <div class="good-buy">
+                                    <form action="~/Cart/Add" method="POST">
+                                        <input type="hidden" name="id" value="@ViewBag.Goods[i].Id" />
+                                        <input class="required-count" min="0" max="@ViewBag.Goods[i].CountInStorage" name="count" type="number" required />
+                                        <button type="submit" class="good-to-cart">В корзину</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                if ((i % 4 == 0 && i != tr) || i == ViewBag.Goods.Count - 1)
+                    @Html.Raw("</tr>");
+            }
+            }
+        </table>
+    </div>
+
+    <div class="foot">
+        @if (ViewBag.Page > 1)
+        {
+            @Html.ActionLink("<<", "Index", new { page = 1})
+            @Html.Raw(" ");
+            @Html.ActionLink("< Пред.", "Index", new { page = ViewBag.Page - 1})
+        }
+        else
+        {
+            @:<<
+            @Html.Raw(" ");
+            @:< Пред.
+        }
+
+        @if (ViewBag.Page < ViewBag.countPages)
+        {
+            @Html.ActionLink("След. >", "Index", new { page = ViewBag.Page + 1})
+            @Html.Raw(" ");
+            @Html.ActionLink(">>", "Index", new { page = ViewBag.countPages})
+        }
+        else
+        {
+            @:След. >
+            @Html.Raw(" ")
+            @:>>
+        }
+        <div>
+            Стр @(ViewBag.countPages < ViewBag.Page ? 0 : ViewBag.Page) из @ViewBag.countPages
+        </div>
+    </div>

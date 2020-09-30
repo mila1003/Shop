@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "_LayoutAdministration";
+}
+@model IShop.Models.Category
+<link rel="stylesheet" href="~/css/Administration/Items.css" />
+<div id="items-panel-modify">
+    <h2>Добавление категории</h2>
+    <div>
+        <form method="post">
+            <div>
+                <label for="Name">Наименование:</label>
+                <input name="Name" required/>
+            </div>
+            <div>
+                <button type="submit">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>

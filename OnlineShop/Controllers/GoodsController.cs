@@ -1,55 +1,94 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using IShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
+using OnlineShop.Models;
 
 namespace OnlineShop.Controllers
 {
     public class GoodsController : Controller
     {
-        const int pageSize = 4;
+        const int pageSize = 16;
+        const int pageSizeBanner = 4;
         ShopContext _context;
         public GoodsController(ShopContext context)
         {
             _context = context;
         }
 
-        private List<Good> PagedGoods(int startPage, int pageSize, List<Good> goods, out int CountPages)
+        public async Task<ActionResult> Index(int page)
         {
-            CountPages = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(goods.Count()) / Convert.ToDouble(pageSize)));
-            List<Good> result = new List<Good>();
-            if (startPage <= CountPages && CountPages != 0)
-            {
-                for (int i = 1; i < pageSize + 1; i++)
-                {
-                    if (startPage * pageSize - i >= goods.Count) continue;
-                    else
-                        result.Add(goods[startPage * pageSize - i]);
-                }
-                return result;
-            }
-            else return result;
+            ViewBag.DiscountGoods = await _context.goods.Where(g => g.Discount != 0).ToListAsync();
+            ViewBag.Categories = await _context.categories.Include(c => c.subcategories).ToListAsync();
 
+            var cart = ShoppingCart.GetCart(HttpContext);
+            cart.context = _context;
+            ViewBag.CartSum = cart.GetTotalCartSum();
+
+            ViewBag.Page = page;
+            ViewBag.countPages = Math.Ceiling(Convert.ToDouble(await _context.goods.CountAsync()) / pageSizeBanner);
+            ViewBag.Goods = await _context.goods.Skip((page - 1) * pageSizeBanner)
+                                                 .Take(pageSizeBanner)
+                                                 .ToListAsync();
+
+            return View();
         }
 
-        public ActionResult Show(int page,int? subcategoryId, string search,
+        public async Task<ActionResult> Show(int page, int? subcategoryId, string search,
                                       string hasDiscount, int? fromDiscount, int? toDiscount,
-                                      string sort, double? fromPrice, double? toPrice)
+                                      string sort, double? fromPrice, double? toPrice,
+                                      string Filter)
         {
-            List<Good> goods = new List<Good>();
-            ViewBag.CartSum = ShopController.TotalCartSum;
-            ViewBag.Categories = _context.categories.Include(c => c.subcategories).ToList();
-            ViewBag.SubcategoryId = subcategoryId;
-            if (subcategoryId != null)
+            if (Filter == "no")
             {
-                goods = _context.goods.Where(g => g.SubcategoryId == subcategoryId).ToList();
+                var cart = ShoppingCart.GetCart(HttpContext);
+                cart.context = _context;
+                ViewBag.CartSum = cart.GetTotalCartSum();
+                ViewBag.Categories = await _context.categories.Include(c => c.subcategories).ToListAsync();
+                ViewBag.SubcategoryId = subcategoryId;
+
+                //Search
+                ViewBag.Search = "";
+                //Only with discount
+                ViewBag.HasDiscount = "";
+                ViewBag.fromDiscount = "";
+                ViewBag.toDiscount = "";
+                //Sort
+                ViewBag.Sort = "";
+                //By price
+                ViewBag.fromPrice = "";
+                ViewBag.toPrice = "";
+
+                ViewBag.Goods = await _context.goods.Where(g => g.SubcategoryId == subcategoryId)
+                                                     .Skip((page - 1) * pageSize)
+                                                     .Take(pageSize).ToListAsync();
+                ViewBag.Page = page;
+                ViewBag.countPages = Math.Ceiling(Convert.ToDouble(await _context.goods.Where(g => g.SubcategoryId == subcategoryId).CountAsync()) / pageSize);
+                return View();
             }
-            if (search != "" && search != null)
-                goods = _context.goods.Where(g => g.Name.Contains(search)).ToList();
+            else
+            {
+                List<Good> goods = new List<Good>();
+                var cart = ShoppingCart.GetCart(HttpContext);
+                cart.context = _context;
+                ViewBag.CartSum = cart.GetTotalCartSum();
+                ViewBag.Categories = await _context.categories.Include(c => c.subcategories).ToListAsync();
+                ViewBag.SubcategoryId = subcategoryId;
+                Subcategory subcategory = await _context.subcategories.Include(s => s.Category).FirstOrDefaultAsync(s => s.Id == subcategoryId);
+                ViewBag.Category = subcategory.Category.Name;
+                ViewBag.Subcategory = subcategory.Name;
+
+                if (subcategoryId != null)
+                {
+                    goods = await _context.goods.Where(g => g.SubcategoryId == subcategoryId).ToListAsync();
+                }
+                if (search != "" && search != null)
+                    goods = await _context.goods.Where(g => g.Name.Contains(search)).ToListAsync();
                 //Search
                 ViewBag.Search = search;
                 //Only with discount
@@ -75,22 +114,26 @@ namespace OnlineShop.Controllers
                 ViewBag.toPrice = toPrice;
                 if (fromPrice != null && toPrice != null)
                     goods = goods.Where(g => g.Price >= fromPrice).Where(g => g.Price <= toPrice).ToList();
-            //For paging 
-            int pageCount = 0;
-            ViewBag.Goods = PagedGoods(page, pageSize, goods, out pageCount);
-            ViewBag.Page = page;
-            ViewBag.countPages = pageCount;
-            return View();
+                //For paging 
+                ViewBag.Goods = goods.Skip((page - 1) * pageSize)
+                                                     .Take(pageSize).ToList();
+                ViewBag.Page = page;
+                ViewBag.countPages = Math.Ceiling(Convert.ToDouble(goods.Count()) / pageSize);
+                return View();
+            }
         }
 
-        public ActionResult MoreInfo(int id)
+        public async Task<ActionResult> MoreInfo(int id)
         {
             //TotalSumCart
-            ViewBag.CartSum = ShopController.TotalCartSum;
+            var cart = ShoppingCart.GetCart(HttpContext);
+            cart.context = _context;
+            ViewBag.CartSum = cart.GetTotalCartSum();
             //For showing the categories
-            ViewBag.Categories = _context.categories.Include(c => c.subcategories).ToList();
+            ViewBag.Categories = await _context.categories.Include(c => c.subcategories).ToListAsync();
             //The certain good by id
-            ViewBag.Good = _context.goods.Find(id);
+            Good good = await _context.goods.FirstOrDefaultAsync(g => g.Id == id);
+            ViewBag.Good = await _context.goods.FirstOrDefaultAsync(g=>g.Id==id);
             return View();
         }
     }

@@ -1,6 +1,7 @@
 ﻿
 using BulderGoods.Models;
 using Microsoft.EntityFrameworkCore;
+using OnlineShop.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -16,11 +17,14 @@ namespace IShop.Models
         public DbSet<Subcategory> subcategories { get; set; }
         public DbSet<Good> goods { get; set; }
 
-        public DbSet<CartItem> ShoppingCartItems { get; set; }
+        public DbSet<CartItem> shoppingCartItems { get; set; }
+
+        public DbSet<Admin> admins { get; set; }
 
         public ShopContext(DbContextOptions<ShopContext> options)
             : base(options)
         {
+           // Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
@@ -30,6 +34,12 @@ namespace IShop.Models
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+           modelBuilder.Entity<Admin>().HasData(
+           new Admin[]
+           {
+                new Admin{Id=1, Password="admin", Email="none"}
+           });
+
             modelBuilder.Entity<Good>()
             .HasOne(p => p.Subcategory)
             .WithMany(t => t.goods);

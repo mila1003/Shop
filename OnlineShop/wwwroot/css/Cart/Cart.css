@@ -1,0 +1,26 @@
+﻿#apply-cart {
+    width: 15%;
+    height: 2em;
+    margin: 2% 0;
+    background: #c3213c;
+    color: #fff;
+}
+
+.cart-button:hover {
+    background: #f3dde1;
+    color: #c3213c;
+}
+
+#cart {
+    text-align: left;
+}
+
+#cart .good-in-cart {
+    color: #808080;
+}
+
+#cart .delete-from-cart a{
+    color: #c3213c;
+}
+
+

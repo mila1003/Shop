@@ -1,0 +1,66 @@
+﻿@using IShop.Models;
+@model IEnumerable<Subcategory>
+@{
+    Layout = "_LayoutAdministration";
+}
+<link rel="stylesheet" href="~/css/Administration/Items.css" />
+<div id="items-panel">
+    <div id="items-search">
+        <form action="~/Administration/Subcategories?page=1" method="post">
+            <input value="@ViewBag.Search" name="search" placeholder="Найти...">
+            <button button type="submit">GO</button>
+        </form>
+    </div>
+    <div id="items">
+        <h2>Подкатегории</h2>
+        <table>
+            <tr>
+                <td><b>Категория</b></td>
+                <td><b>Наименование</b></td>
+                <td></td>
+                <td></td>
+            </tr>
+            @foreach (Subcategory subcategory in Model)
+            {
+                <tr>
+                    <td><a href="~/Administration/UpdateCategory?id=@subcategory.CategoryId">@subcategory.Category.Name</a></td>
+                    <td>@subcategory.Name</td>
+                    <td><a href="~/Administration/DeleteSubcategory?id=@subcategory.Id"><input type="button" value="Удалить" /></a></td>
+                    <td><a href="~/Administration/UpdateSubcategory?id=@subcategory.Id"><input type="button" value="Редактировать" /></a></td>
+                </tr>
+            }
+        </table>
+    </div>
+    <br />
+
+    <div class="foot">
+        @if (ViewBag.Page > 1)
+        {
+            @Html.ActionLink("<<", "Subcategories", new { page = 1, search = ViewBag.Search })
+            @Html.Raw(" ");
+            @Html.ActionLink("< Пред.", "Subcategories", new { page = ViewBag.Page - 1, search = ViewBag.Search })
+        }
+        else
+        {
+            @:<<
+            @Html.Raw(" ");
+            @:< Пред.
+        }
+
+        @if (ViewBag.Page < ViewBag.countPages)
+        {
+            @Html.ActionLink("След. >", "Subcategories", new { page = ViewBag.Page + 1, search = ViewBag.Search })
+            @Html.Raw(" ");
+            @Html.ActionLink(">>", "Subcategories", new { page = ViewBag.countPages, search = ViewBag.Search })
+        }
+        else
+        {
+            @:След. >
+            @Html.Raw(" ")
+            @:>>
+        }
+        <div>
+            Стр @(ViewBag.countPages < ViewBag.Page ? 0 : ViewBag.Page) из @ViewBag.countPages
+        </div>
+    </div>
+</div>

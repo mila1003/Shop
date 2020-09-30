@@ -1,0 +1,47 @@
+﻿@{
+    Layout = "_LayoutAdministration";
+}
+<link rel="stylesheet" href="~/css/Administration/Index.css" />
+<div id="menu-panel">
+    <div id="panel-password-email">
+        <p>@ViewBag.Message</p>
+        <div class="items">
+            <details>
+                <summary>Изменить пароль</summary>
+                <div>
+                    <form action="~/Administration/ChangePassword" method="put">
+                        <div class="item-inner">
+                            <label for="oldPassword">Введите старый пароль</label>
+                            <input type="password" name="oldPassword" />
+                        </div>
+                        <div class="item-inner">
+                            <label for="newPassword">Введите новый пароль</label>
+                            <input type="password" name="newPassword" />
+                        </div>
+                        <div>
+                            <input type="submit" value="Применить" />
+                        </div>
+                    </form>
+                </div>
+            </details>
+        </div>
+        <div class="items">
+            <details>
+                <summary>Изменить почту</summary>
+                <div>
+                    <form action="~/Administration/ChangeEmail">
+                        <div class="item-inner">
+                            <label> Текущий адрес почты: @ViewBag.Email</label>
+                            <br/>
+                                <label for="newEmail">Введите адрес почты</label>
+                                <input type="email" name="newEmail" />
+                        </div>
+                        <div>
+                            <input type="submit" value="Применить" />
+                        </div>
+                    </form>
+                </div>
+            </details>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,82 @@
+﻿h2 {
+    text-align: center;
+    margin: 3%;
+}
+
+/*Showing*/
+#items-panel {
+    width: 88%;
+}
+
+#items-search {
+    text-align: right;
+    margin: 1%;
+}
+
+    #items-search input {
+        width: 30%;
+    }
+
+    #items-search button {
+        width: 5%;
+    }
+
+#items-panel .foot {
+    text-align: center;
+}
+
+    #items-panel .foot div {
+        margin: 1.5%;
+    }
+
+#items-panel img {
+    width: 100%;
+}
+
+#items-panel .note {
+    width: 20%;
+}
+
+figure :hover {
+    box-shadow: 0 2px 3px #808080;
+}
+
+figure:focus {
+    outline-width: 0;
+    -webkit-transform: rotate(0deg) scale(6);
+    -moz-transform: rotate(0deg) scale(6);
+    -o-transform: rotate(0deg) scale(6);
+    -ms-transform: rotate(0deg) scale(6);
+    position: relative;
+    left: 400%;
+}
+
+#items {
+    overflow: auto;
+}
+
+/*Adding, editing*/
+#items-panel-modify {
+    width: 90%;
+}
+
+    #items-panel-modify img {
+        width: 30%;
+        margin-right: 20%;
+    }
+
+    #items-panel-modify form {
+        margin-left: 5%;
+        width: 30%;
+    }
+
+        #items-panel-modify form div {
+            display: flex;
+            justify-content: space-between;
+            margin: 2% 0;
+        }
+
+    #items-panel-modify button {
+        margin: 2% 0;
+        width: 40%;
+    }

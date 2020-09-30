@@ -2,114 +2,105 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online shop</title>
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/Shared.css" />
+    <link rel="stylesheet" href="~/css/Animate.css" />
 </head>
 <body>
-    <div id="container">
-        <header>
-            <div class="header-logo-shedule-search-cart">
-                <div class="header-logo">
-                    <img src="~/images/logo.png" />
+    <header>
+        <div id="site-logo-nav">
+            <div id="logo">
+                <img src="/images/logo.png">
+            </div>
+            <div>
+                <div id="shedule">
+                    <div>Пн-Сб с <b>8.00</b> до <b>17.00</b></div>
+                    <div>Воскресенье - выходной</div>
                 </div>
-                <div class="header-shedule">
-                    <div class="shedule">
-                        <div>Пн-Сб с <b>8.00</b> до <b>17.00</b></div>
-                        <div>Воскресенье - выходной</div>
-                    </div>
-                    <div class="social">
-                        <ul>
-                            <li><a href="https://www.instagram.com/"><img src="~/images/inst.png" /></a>    </li>
-                            <li><a href="https://twitter.com/"><img src="~/images/facebook.png" /></a>      </li>
-                            <li><a href="https://www.facebook.com/"><img src="~/images/twitter.png" /></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="header-search">
-                    <div class="motto">
-                        <div><h2>Лучшее качество и хорошие цены!</h2></div>
-                    </div>
-                    <div class="search">
-                        <form action="~/Goods/Show?page=1" method="POST">
-                            <input type="text" name ="search" placeholder="Найти...">
-                            <button button type="submit">GO</button>
-                        </form>
-                    </div>
-                </div>
-                <div class="header-cart">
-                    <a href="~/Shop/GetCartItems"><img src="~/images/basket.png" /></a>
-                    <div class="cart-sum">@ViewBag.CartSum</div>
+                <div id="nav">
+                    <a><div>Главная</div></a>
+                    <a><div>О нас</div></a>
+                    <a><div>Контакты</div></a>
                 </div>
             </div>
-        </header>
-        <nav>
-            <div class="nav-main-about-contacts">
-                <a><div>Главная</div></a>
-                <a><div>О нас</div></a>
-                <a><div>Контакты</div></a>
+
+        </div>
+        <div id="site-search">
+            <div>
+                <div id="site-phone">
+                    +375(29)111-11-11
+                </div>
+                <div id="search">
+                    <form method="get">
+                        <input name="search" placeholder="Найти...">
+                        <button button="" type="submit">GO</button>
+                    </form>
+                </div>
             </div>
-        </nav>
-        <menu>
-            <div id="menu-categories">
-                @foreach (IShop.Models.Category category in ViewBag.Categories)
-                {
-                    <details>
-                        <summary class="category-name">@category.Name</summary>
-                        <table>
-                            @foreach (IShop.Models.Subcategory subcategory in category.subcategories)
-                            {
-                                <tr>
-                                    <td class="subcategory-name"><a href="/Goods/Show?subcategoryId=@subcategory.Id&page=1">@subcategory.Name</a></td>
-                                </tr>
-                            }
-                        </table>
-                    </details>
-                }
-                <br />
+        </div>
+
+        <div id="site-cart">
+            <div id="cart-sum">
+                <div>
+                    @ViewBag.CartSum<div>
+                        <div id="rublle">руб.</div>
+                    </div>
+                </div>
+            </div>
+            <div id="line"></div>
+            <div id="image"><a href="~/Cart/Index"><img src="/images/basket.png"></a></div>
+        </div>
+    </header>
+    <main>
+        <div id="menu-categories">
+            <div id="categories">Категории</div>
+            @foreach (IShop.Models.Category category in ViewBag.Categories)
+            {
+                <details>
+                    <summary class="category-name">@category.Name</summary>
+                    <table>
+                        @foreach (IShop.Models.Subcategory subcategory in category.subcategories)
+                        {
+                            <tr>
+                                <td class="subcategory-name"><a href="/Goods/Show?subcategoryId=@subcategory.Id&page=1">@subcategory.Name</a></td>
+                            </tr>
+                        }
+                    </table>
+                </details>
+            }
+            <br />
+            <div id="converter">
                 <script>var fm = "BYN"; var to = "RUB"; var tz = "3"; var sz = "1x1"; var lg = "ru"; var st = "default"; var lr = "1"; var rd = "0";</script><a href="https://ru.currencyrate.today/converter-widget" title="Конвертер валют">
                     <script src="//currencyrate.today/converter"></script>
-                </a><div style="font-size:.8em;"><a href="https://currencyrate.today">Конвертер валют</a></div>
+                </a><div style="font-size:.8em;"><a href="https://currencyrate.today"></a></div>
             </div>
+        </div>
+        <div id="container">
             @RenderBody()
-            </menu>
-        <footer>
-            <div class="footer-top">
-                <div>
-                    <span class="footer-header">Контакты</span>
-                    <hr>
-                    <div class="footer-main">
-                        <span>Телефон: +375(29)522-78-45; <br />+375(44)154-89-25</span>
-                        <span>Email: VCS_StroyMaterial@mail.ru</span>
-                    </div>
-                </div>
-                <div>
-                    <span class="footer-header">Адрес</span>
-                    <hr>
-                    <div class="footer-main">
-                        <span>Нащ офис находтся по адресу:</span>
-                        <span>г.Гомель, ул. Барыкина 78</span>
-                        <span>Часы приема: с 8.00 до 17.00</span>
-                    </div>
-                </div>
-                <div>
-                    <span class="footer-header">Соцсети</span>
-                    <hr>
-                    <div class="social">
-                        <ul>
-                            Instagram:
-                            <li> <a href="https://www.instagram.com/"><img src="~/images/inst.png" /></a></li>
-                            Facebook:
-                            <li><a href="https://twitter.com/"><img src="~/images/facebook.png" /></a></li>
-                            Twitter:
-                            <li><a href="https://www.facebook.com/"><img src="~/images/twitter.png" /></a></li>
-                        </ul>
-                    </div>
-                </div>
+        </div>
+    </main>
+    <footer>
+        <div id="footer-top">
+            <div class="footer-item">
+                <span class="footer-header">Контакты</span>
+                <div class="line"></div>
+                <span><b>Телефон</b>: +375(29)522-78-45;</span>
+                <br />
+                <span><b>Email</b>: VCS_StroyMaterial@mail.ru</span>
             </div>
-            <div class="footer-bottom">
-                <span>Copyright © 2020.</span>
+            <div class="footer-item">
+                <span class="footer-header">Адрес</span>
+                <div class="line"></div>
+                <span>Нащ офис находтся по <b>адресу</b>:</span>
+                <span>г.Гомель, ул. Барыкина 78</span>
+                <br />
+                <span><b>Время</b> работы: с 8.00 до 17.00</span>
             </div>
-        </footer>
-    </div>
+        </div>
+        <div id="footer-bottom">
+            <span>© 2020 <a>"VCS"</a></span>
+        </div>
+    </footer>
 </body>
 </html>

@@ -1,0 +1,78 @@
+﻿@{
+    Layout = "_LayoutAdministration";
+}
+@model List<IShop.Models.Category>
+
+<link rel="stylesheet" href="~/css/Administration/Items.css" />
+<script tyle="text/javascript" src="~/js/Administration/LoadImage.js"></script>
+<div id="items-panel-modify">
+    <h2>Добавление товара</h2>
+    <div>
+        <form method="post" enctype="multipart/form-data">
+            <div>
+                <label for="Name">Наименование:</label>
+                <input name="Name" required/>
+            </div>
+            <div>
+                <details>
+                    <summary>Категория:</summary>
+                    @foreach (IShop.Models.Category category in Model)
+                    {
+                        <details>
+                            <summary>@category.Name:</summary>
+                            <table>
+                                @foreach (IShop.Models.Subcategory subcategory in category.subcategories)
+                                {
+                                    <tr>
+                                        <td>
+                                            <input type="radio" name="subcategoryId" value="@subcategory.Id" required checked>
+                                        </td>
+                                        <td>
+                                            <p>@subcategory.Name</p>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </details>
+                    }
+                </details>
+            </div>
+            <div>
+                <label for="Unit">Ед.из:</label>
+                <input name="Unit" required/>
+            </div>
+            <div>
+                <label for="Price">Цена:</label>
+                <input type="number" step="any" min="0.01" name="Price" required/>
+            </div>
+            <div>
+                <label for="Discount">Скидка:</label>
+                <input type="number" step="any" min="0" name="Discount" required/>
+            </div>
+            <div>
+                <label for="CountInStorage">В наличии:</label>
+                <input name="CountInStorage" required/>
+            </div>
+            <div>
+                <label for="Maker">Производитель</label>
+                <input name="Maker" required/>
+            </div>
+            <div>
+                <label for="Guarantee">Гарантия:</label>
+                <input name="Guarantee" required/>
+            </div>
+            <div>
+                <label for="Note">Описание:</label>
+                <input maxlength="450" rows="5" name="Note" required/>
+            </div>
+            <div>
+                <label for="Image">Фото:</label>
+                <input onchange="checkSize()" type="file" name="Image" required/>
+            </div>
+            <div>
+                <button type="submit">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+

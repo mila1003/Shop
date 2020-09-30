@@ -1,33 +1,41 @@
-﻿<link rel="stylesheet" href="~/css/ShowGoods.css" />
+﻿<link rel="stylesheet" href="~/css/Goods/MoreInfo.css" />
 <div id="good-more-info">
+    <div id="good-main-info">
     <div class="good-image">
-        <figure tabindex="1"> @Html.Raw("<img src=\"data:image/jpeg;base64," + Convert.ToBase64String(ViewBag.Good.Image) + "\" />")</figure>
+        <figure tabindex="1">@Html.Raw("<img src=\"data:image/jpeg;base64," + Convert.ToBase64String(ViewBag.Good.Image) + "\" />")</figure>
     </div>
-    <div class="good-discription">
-        <h2>@ViewBag.Good.Name</h2>
+    <div class="good-summary">
+        <div id="good-title">
+            <h2>@ViewBag.Good.Name</h2>
+            @if (ViewBag.Good.Discount != 0)
+            {
+                <div id="discount">@ViewBag.Good.Discount%</div>
+            }
+        </div>
         <span>Ед.изм: @ViewBag.Good.Unit</span><div>
-    <div>
-        @if (ViewBag.Good.Discount == 0)
-        {
-            <span>Цена<b> @ViewBag.Good.Price</b> (бел. руб.)</span>
-        }
-        else
-        {
-            <span class="good-discount-priceOLd">Цена <b><s>@ViewBag.Good.Price</s> </b></span>
-            <span class="good-discount-priceNew"><b> @Math.Round(@ViewBag.Good.Price - ((@ViewBag.Good.Price * @ViewBag.Good.Discount) / 100), 2)</b>(бел.руб.)</span>
-        }
+            <div>
+                @if (ViewBag.Good.Discount == 0)
+                {
+                    <span>Цена<b> @ViewBag.Good.Price</b> (бел. руб.)</span>
+                }
+                else
+                {
+                    <span class="good-discount-priceOLd">Цена <b><s>@ViewBag.Good.Price</s> </b></span>
+                    <span class="good-discount-priceNew"><b> @Math.Round(@ViewBag.Good.Price - ((@ViewBag.Good.Price * @ViewBag.Good.Discount) / 100), 2)</b>(бел.руб.)</span>
+                }
+            </div>
+            <div><span>В наличии: @ViewBag.Good.CountInStorage</span></div>
+            <div><span>Страна производитель: @ViewBag.Good.Maker</span></div>
+            <div><span>Гарантия: @ViewBag.Good.Guarantee</span></div>
+            <div class="good-buy">
+                <form action="~/Cart/Add" method="POST">
+                    <input type="hidden" name="id" value="@ViewBag.Good.Id" />
+                    <input class="required-count" min="0" max="@ViewBag.Good.CountInStorage" name="count" type="number" required />
+                    <button type="submit" class="good-to-cart">В корзину</button>
+                </form>
+            </div>
+        </div>
     </div>
-    <div><span>В наличии: @ViewBag.Good.CountInStorage</span></div>
-    <div><span>Страна производитель: @ViewBag.Good.Maker</span></div>
-    <div><span>Гарантия: @ViewBag.Good.Guarantee</span></div>
-    <div><span>Описание: @ViewBag.Good.Note</span></div>
-    <div class="good-buy">
-        <form action="~/Shop/AddToCart" method="POST">
-            <input type="hidden" name="id" value="@ViewBag.Good.Id" />
-            <input class="required-count" min="0" max="@ViewBag.Good.CountInStorage" name="count" type="number" required />
-            <button type="submit" class="good-to-cart">В корзину</button>
-        </form>
-    </div>
-</div>
-    </div>
+        </div>
+    <div id="good-discription"><b>Описание</b>: @ViewBag.Good.Note</div>
 </div>

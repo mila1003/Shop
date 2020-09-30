@@ -1,10 +1,10 @@
-﻿<link rel="stylesheet" href="~/css/ShoppingCart.css"/>
+﻿<link rel="stylesheet" href="~/css/Cart/Cart.css" />
 <script tyle="text/javascript" src="~/js/MakeOrder.js">
 </script>
 <div id="cart">
     <table>
         <tr>
-            <th style="width: 10px;">
+            <th>
                 Оформить
             </th>
             <th>
@@ -28,7 +28,7 @@
                     <input class="cart-checkbox" onclick="InOrder()" type="checkbox" value="@item.ItemId" />
                 </td>
                 <td>
-                    <a href="~/Goods/MoreInfo/@item.GoodId">@item.Good.Name</a>
+                    <a class="good-in-cart" href="~/Goods/MoreInfo?Id=@item.Good.Id">@item.Good.Name</a>
                 </td>
                 <td>
                     @item.Good.Price
@@ -39,7 +39,7 @@
                 <td>
                     @item.Good.Discount
                 </td>
-                <td>
+                <td class="delete-from-cart">
                     @Html.ActionLink("Удалить", "RemoveFromCart", "Shop", new { id = item.ItemId }, "")
                 </td>
             </tr>
@@ -51,9 +51,9 @@
             </td>
 
             <td>
-                @ViewBag.sumCart
+                @ViewBag.CartSum
             </td>
         </tr>
     </table>
-    <div> <a id="linkorder" href=""><input type="button" class="cart-button" value="Оформить заказ"></a></div>
+    <div> <a id="linkorder"><input type="button" id="apply-cart" value="Оформить заказ"></a></div>
 </div>

@@ -3,37 +3,45 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using BulderGoods.Models;
 using IShop.Models;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Session;
 using Microsoft.EntityFrameworkCore;
+using OnlineShop.Models;
 
 namespace OnlineShop.Controllers
 {
-    public class ShopController : Controller
+    public class CartController : Controller
     {
         public const string CartSessionKey = "CartId";
         public string ShoppingCartId { get; set; }
-        public static double TotalCartSum;
+        //public static double TotalCartSum;
 
         ShopContext _context;
 
-        public ShopController(ShopContext context)
+        public CartController(ShopContext context)
         {
             _context = context;
         }
 
-        public IActionResult Index()
+        //Show the goods from the cart
+        public async Task<IActionResult> Index()
         {
-            ViewBag.CartSum = TotalCartSum;
-            ViewBag.Categories = _context.categories.Include(c => c.subcategories).ToList();
-            //Goods with discount
-            ViewBag.DiscountGoods = _context.goods.Where(g => g.Discount != 0).ToList();
+            ViewBag.Categories = await _context.categories.Include(c => c.subcategories).ToListAsync();
+            ShoppingCartId = GetCartId();
+            ViewBag.CartSum = GetTotalCartSum();
+
+            //Getting goods from the cart
+            ViewBag.CartItems = await _context.shoppingCartItems.Where(
+                c => c.CartId == ShoppingCartId).Include(i => i.Good).ToListAsync();
             return View();
         }
 
-        public ActionResult AddToCart(int id, int count)
+        public async Task<ActionResult> Add(int id, int count)
         {
             if (count == 0)
             {
@@ -42,7 +50,7 @@ namespace OnlineShop.Controllers
             else
             {
                 ShoppingCartId = GetCartId();
-                var cartItem = _context.ShoppingCartItems.SingleOrDefault(
+                var cartItem = await _context.shoppingCartItems.SingleOrDefaultAsync(
                     c => c.CartId == ShoppingCartId
                     && c.GoodId == id);
 
@@ -53,44 +61,45 @@ namespace OnlineShop.Controllers
                         ItemId = Guid.NewGuid().ToString(),
                         GoodId = id,
                         CartId = ShoppingCartId,
-                        Good = _context.goods.SingleOrDefault(
+                        Good = await _context.goods.SingleOrDefaultAsync(
                                 p => p.Id == id),
                         DateCreated = DateTime.Now,
                         Count = count
                     };
-                    _context.ShoppingCartItems.Add(cartItem);
+                    await _context.shoppingCartItems.AddAsync(cartItem);
 
                     //Decrease the good count in a storage
-                    Good goodAdded = _context.goods.FirstOrDefault(g => g.Id == id);
+                    Good goodAdded = await _context.goods.FirstOrDefaultAsync(g => g.Id == id);
                     goodAdded.CountInStorage = goodAdded.CountInStorage - (int)count;
                 }
                 else
                 {
                     cartItem.Count++;
                 }
-                _context.SaveChanges();
-                TotalCartSum = GetTotalCartSum();
-                return RedirectToAction("GetCartItems");
+                await _context.SaveChangesAsync();
+
+                //TotalCartSum = GetTotalCartSum();
+                return RedirectToAction("Index");
             }
         }
 
-        public ActionResult RemoveFromCart(string id)
+        public async Task<ActionResult> RemoveFromCart(string id)
         {
             ShoppingCartId = GetCartId();
-            var cartItem = _context.ShoppingCartItems.SingleOrDefault(
+            var cartItem =  await _context.shoppingCartItems.SingleOrDefaultAsync(
                 c => c.CartId == ShoppingCartId
                 && c.ItemId == id);
-                _context.ShoppingCartItems.Remove(cartItem);
+                _context.shoppingCartItems.Remove(cartItem);
             //Increase the good count in a storage
-            Good goodRemoved = _context.goods.FirstOrDefault(g => g.Id == cartItem.GoodId);
+            Good goodRemoved = await _context.goods.FirstOrDefaultAsync(g => g.Id == cartItem.GoodId);
             goodRemoved.CountInStorage = goodRemoved.CountInStorage +1;
 
-            _context.SaveChanges();
-            TotalCartSum = GetTotalCartSum();
-            return RedirectToAction("GetCartItems");
+            await _context.SaveChangesAsync();
+            //TotalCartSum = GetTotalCartSum();
+            return RedirectToAction("Index");
         }
 
-        public ActionResult SendToEmail(string InOrder,
+        public async Task<ActionResult> SendToEmail(string InOrder,
                                         string Surname, string Name, string SecondName, 
                                         string Tel, string Email, string Address, string Deliver)
         {
@@ -106,8 +115,8 @@ namespace OnlineShop.Controllers
 
             //Get all goods from the cart
             ShoppingCartId = GetCartId(); 
-            var cart = _context.ShoppingCartItems.Where(
-                c => c.CartId == ShoppingCartId).Include(i => i.Good).ToList();
+            var cart = await _context.shoppingCartItems.Where(
+                c => c.CartId == ShoppingCartId).Include(i => i.Good).ToListAsync();
 
             double totalsum = 0;
             string[] ItemsToOrder = InOrder.Split('?');
@@ -118,8 +127,8 @@ namespace OnlineShop.Controllers
                     //if the good is selected to buy then include the good the the order
                     if (x.ItemId == ItemsToOrder[i])
                     {
-                        _context.ShoppingCartItems.Remove(x);
-                            _context.SaveChanges();
+                        _context.shoppingCartItems.Remove(x);
+                        await _context.SaveChangesAsync();
                             totalsum += Math.Round(x.Count * (x.Good.Price - ((x.Good.Price * x.Good.Discount) / 100)), 2);
                             body += $"Товар: {x.Good.Name} Кол-во: {x.Count} Цена: {x.Good.Price} Скидка: {x.Good.Discount} \n";
                     }
@@ -149,36 +158,36 @@ namespace OnlineShop.Controllers
                 smtp.Send(mess);
             }
 
-            TotalCartSum = GetTotalCartSum();
-            ViewBag.CartSum = TotalCartSum;
+            //TotalCartSum = GetTotalCartSum();
+            ViewBag.CartSum = GetTotalCartSum();
             return View();
         }
 
         //To get selected goods from the cart
-        public ActionResult MakeOrder(string InOrder)
+        public async Task<ActionResult> MakeOrder(string InOrder)
         {
-            ViewBag.Categories = _context.categories.Include(c => c.subcategories).ToList();
+            ViewBag.Categories = await _context.categories.Include(c => c.subcategories).ToListAsync();
             ViewBag.InOrder = InOrder;
-            ViewBag.CartSum = TotalCartSum;
-            return View();
-        }
-
-        //Show the goods from the cart
-        public ActionResult GetCartItems()
-        {
-            ViewBag.Categories = _context.categories.Include(c => c.subcategories).ToList();
-            ShoppingCartId = GetCartId();
-            ViewBag.CartSum = TotalCartSum;
-            ViewBag.sumCart = TotalCartSum;
-
-            //Getting goods from the cart
-            ViewBag.CartItems = _context.ShoppingCartItems.Where(
-                c => c.CartId == ShoppingCartId).Include(i=>i.Good).ToList();
+            ViewBag.CartSum = GetTotalCartSum();
             return View();
         }
 
         public string GetCartId()
         {
+            //DateTime date = DateTime.Now.Subtract(new TimeSpan(0, 1, 0));
+            //List <CartItem> cartItems = await _context.shoppingCartItems
+            //                          .Include(i => i.Good).Where(item =>
+            //                            item.DateCreated < date)
+            //                          .ToListAsync();
+            //foreach (CartItem cartItem in cartItems)
+            //{
+            //    var good = _context.goods.Find(cartItem.GoodId);
+            //    good.CountInStorage += cartItem.Count;
+            //    _context.shoppingCartItems.Remove(cartItem);
+            //    _context.SaveChanges();
+            //}
+            //TotalCartSum = GetTotalCartSum();
+
             if (HttpContext.Session.GetString("CartSessionKey") == null)
             {
                 if (!string.IsNullOrWhiteSpace(HttpContext.User.Identity.Name))
@@ -194,10 +203,10 @@ namespace OnlineShop.Controllers
             return HttpContext.Session.GetString("CartSessionKey");
         }
 
-        public  double GetTotalCartSum()
+        public double GetTotalCartSum()
         {
             ShoppingCartId = GetCartId();
-            return Math.Round(_context.ShoppingCartItems.Where(
+            return Math.Round(_context.shoppingCartItems.Where(
                 c => c.CartId == ShoppingCartId).Sum(i=>i.Count*Math.Round( i.Good.Price- (i.Good.Price* i.Good.Discount) /100 ,2)),2);
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IShop.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,7 +29,19 @@ namespace OnlineShop
             services.AddDbContext<ShopContext>(options => options.UseSqlServer(con));
             services.AddControllers();
             services.AddMvcCore();
-            services.AddSession();
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(1);
+                options.Cookie.IsEssential = true;
+            });
+            services.AddControllersWithViews();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+               .AddCookie(options => 
+                {
+                   options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Admin/Login");
+               });
             services.AddControllersWithViews();
         }
 
@@ -47,13 +60,14 @@ namespace OnlineShop
             app.UseSession();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Shop}/{action=index}/{id?}");
+                    pattern: "{controller=Goods}/{action=index}/{page=1}");
             });
         }
     }

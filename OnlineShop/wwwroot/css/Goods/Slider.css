@@ -1,0 +1,60 @@
+﻿#slider {
+    width: 100%;
+    position: relative;
+}
+
+.slide {
+    width: 100%;
+  
+}
+
+.sli-links {
+    margin-top: 10px;
+    text-align: center;
+    width:0%;
+}
+
+.sli-links .control-slide {
+    margin: 2px;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+    text-indent: -9999px;
+}
+
+.sli-links .control-slide:hover {
+    cursor: pointer;
+    background-position: center center;
+}
+
+.sli-links .control-slide.active {
+    background-position: center top;
+}
+
+#prewbutton, #nextbutton {
+    display: block;
+    width: 15px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+    text-indent: -999px;
+    background: url(/images/arrows.png) left center no-repeat;
+    opacity: 0.8;
+    z-index: 3;
+    outline: none !important;
+}
+
+#prewbutton {
+    left: 30px;
+}
+
+#nextbutton {
+    right: 10px;
+    background: url(/images/arrows.png) right center no-repeat;
+}
+
+    #prewbutton:hover, #nextbutton:hover {
+        opacity: 1;
+    }

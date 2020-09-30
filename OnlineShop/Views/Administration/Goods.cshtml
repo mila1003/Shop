@@ -1,0 +1,84 @@
+﻿@using IShop.Models;
+@model IEnumerable<Good>
+@{
+    Layout = "_LayoutAdministration";
+}
+<link rel="stylesheet" href="~/css/Administration/Items.css" />
+<div id="items-panel">
+    <div id="items-search">
+        <form action="~/Administration/Goods?page=1" method="post">
+            <input value="@ViewBag.Search" name="search" placeholder="Найти...">
+            <button button type="submit">GO</button>
+        </form>
+    </div>
+    <div id="items">
+        <h2>Товары</h2>
+        <table>
+            <tr>
+                <td><b>Фото</b></td>
+                <td><b>Категория</b></td>
+                <td><b>Подкатегория</b></td>
+                <td><b>Наименование</b></td>
+                <td><b>Ед.из</b></td>
+                <td><b>Цена</b></td>
+                <td><b>Скидка</b></td>
+                <td><b>В наличии</b></td>
+                <td><b>Производитель</b></td>
+                <td><b>Гарантия</b></td>
+                <td><b>Описание</b></td>
+                <td></td>
+                <td></td>
+            </tr>
+            @foreach (Good good in Model)
+            {
+             <tr>
+                 <td><figure tabindex="1">@Html.Raw("<img src=\"data:image/jpeg;base64," + Convert.ToBase64String(good.Image) + "\" />")</figure></td>
+                 <td><a href="~/Administration/UpdateCategory?id=@good.Subcategory.CategoryId">@good.Subcategory.Category.Name</a></td>
+                 <td><a href="~/Administration/UpdateSubcategory?id=@good.SubcategoryId">@good.Subcategory.Name</a></td>
+                 <td>@good.Name</td>
+                 <td>@good.Unit</td>
+                 <td>@good.Price</td>
+                 <td>@good.Discount</td>
+                 <td>@good.CountInStorage</td>
+                 <td>@good.Maker</td>
+                 <td>@good.Guarantee</td>
+                 <td class="note">@good.Note</td>
+                 <td><a href="~/Administration/DeleteGood?id=@good.Id"><input type="button" value="Удалить" /></a></td>
+                 <td><a href="~/Administration/UpdateGood?id=@good.Id"><input type="button" value="Редактировать" /></a></td>
+            </tr>
+            }
+        </table>
+    </div>
+    <br />
+
+    <div class="foot">
+        @if (ViewBag.Page > 1)
+        {
+            @Html.ActionLink("<<", "Goods", new { page = 1, search = ViewBag.Search })
+            @Html.Raw(" ");
+            @Html.ActionLink("< Пред.", "Goods", new { page = ViewBag.Page - 1, search = ViewBag.Search })
+        }
+        else
+        {
+            @:<<
+            @Html.Raw(" ");
+            @:< Пред.
+        }
+
+        @if (ViewBag.Page < ViewBag.countPages)
+        {
+            @Html.ActionLink("След. >", "Goods", new { page = ViewBag.Page + 1, search = ViewBag.Search })
+            @Html.Raw(" ");
+            @Html.ActionLink(">>", "Goods", new { page = ViewBag.countPages, search = ViewBag.Search })
+        }
+        else
+        {
+            @:След. >
+            @Html.Raw(" ")
+            @:>>
+        }
+        <div>
+            Стр @(ViewBag.countPages < ViewBag.Page ? 0 : ViewBag.Page) из @ViewBag.countPages
+        </div>
+    </div>
+</div>

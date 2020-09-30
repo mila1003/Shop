@@ -1,0 +1,99 @@
+﻿/*For showing more info of a good*/
+/*#good-more-info {
+    width: 750px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#good-more-info img {
+    width: 250px;
+    height: 250px;
+    box-shadow: 0 2px 3px #666;
+    border-radius: 8px;
+}
+*/
+#good-main-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+#good-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#good-more-info .good-image {
+    width: 20%;
+    margin: 2%;
+}
+
+#good-more-info img {
+    width: 100%;
+}
+
+#good-more-info .good-summary {
+    width: 80%;
+    margin: 0 2%;
+}
+
+#good-more-info .good-discount-priceNew {
+    color: #c3213c;
+}
+
+#good-more-info form {
+    margin: 2% 0;
+    display: flex;
+    width: 30%;
+}
+
+#good-more-info .good-buy {
+    display: flex;
+    text-align: center;
+    align-content: center;
+}
+
+#good-more-info .good-to-cart {
+    color: #fff;
+    box-shadow: 0 0.2em 0.9em #ddd;
+    border-radius: 10em;
+    background: #c3213c;
+    width: 55%;
+    height: 2em;
+    font-size: 100%;
+    margin-left: 5%;
+}
+
+    #good-more-info .good-to-cart:hover {
+        background: #f3dde1;
+        color: #c3213c;
+    }
+
+#good-more-info .required-count {
+    border-radius: 0.2em;
+    height: 2em;
+    width: 13%;
+}
+
+#good-more-info .good-discription {
+    width: 100%;
+}
+
+#good-more-info #discount {
+    font-size: 3em;
+    color: #c3213c;
+    text-align: right;
+    margin: 2%;
+}
+
+figure :hover {
+    box-shadow: 0 0.1em 0.2em #ddd;
+}
+
+figure:focus {
+    outline-width: 0;
+    -webkit-transform: rotate(0deg) scale(1.8);
+    -moz-transform: rotate(0deg) scale(1.8);
+    -o-transform: rotate(0deg) scale(1.8);
+    -ms-transform: rotate(0deg) scale(1.8);
+}

@@ -41,7 +41,7 @@
                                 <td><input value="up" name="sort" type="radio" title="Цена по возврастанию"></td>
                             }
                             else
-                    if (ViewBag.Sort == "up")
+                     if (ViewBag.Sort == "up")
                             {
                                 <td><input value="down" name="sort" type="radio">Цена по убыванию</td>
                                 <td><input value="up" name="sort" type="radio" checked>Цена по возврастанию</td>
@@ -72,52 +72,15 @@
     </div>
     <div id="goods">
         <div id="path">
-            <div>@ViewBag.Category 
-                <div class="arrow">
-                    <img src="~/images/arrow.png" />
-                 </div>
-            </div>
-            <div>@ViewBag.Subcategory</div>
+
         </div>
-        <div id="table-600">
-            @for (int i = 0; i < ViewBag.Goods.Count; i++)
-            {
-                 <div class="good">
-                     <div class="good-image">
-                          @Html.Raw("<img src=\"data:image/jpeg;base64," + Convert.ToBase64String(ViewBag.Goods[i].Image) + "\" />")
-                     </div>
-                     <div class="good-discription">
-                         <div><span><b><a href="~/Goods/MoreInfo?Id=@ViewBag.Goods[i].Id">@ViewBag.Goods[i].Name</a></b></span></div>
-                         <span>Ед.изм: @ViewBag.Goods[i].Unit</span><div>
-                             <div>
-                                 @if (ViewBag.Goods[i].Discount == 0)
-                                 {
-                                     <span>Цена<b> @ViewBag.Goods[i].Price</b> (бел. руб.)</span>
-                                 }
-                                 else
-                                 {
-                                     <span class="good-discount-priceOLd">Цена <b><s>@ViewBag.Goods[i].Price</s> </b></span>
-                                     <span class="good-discount-priceNew"><b> @Math.Round(@ViewBag.Goods[i].Price - ((@ViewBag.Goods[i].Price * @ViewBag.Goods[i].Discount) / 100), 2)</b>(бел.руб.)</span>
-                                 }
-                             </div>
-                             <div class="good-buy">
-                                 <form action="~/Cart/Add" method="POST">
-                                     <input type="hidden" name="id" value="@ViewBag.Goods[i].Id" />
-                                     <input class="required-count" min="0" max="@ViewBag.Goods[i].CountInStorage" name="count" type="number" required />
-                                     <button type="submit" class="good-to-cart">В корзину</button>
-                                 </form>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-            }
-        </div>
-        <table id="table-1000">
+        <table>
             @for (int i = 0; i < ViewBag.Goods.Count; i++)
             {
                 int tr = 0;
                 @if (i % 4 == 0)
-                {@Html.Raw("<tr>"); tr = i;};
+                {@Html.Raw("<tr>"); tr = i;
+            };
                     <td>
                         <div class="good">
                             <div class="good-image">

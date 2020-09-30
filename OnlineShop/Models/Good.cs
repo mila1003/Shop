@@ -7,7 +7,7 @@ namespace IShop.Models
 {
     public class Good
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public string Name { get; set; }
 
@@ -27,7 +27,7 @@ namespace IShop.Models
 
         public string Guarantee { get; set; }
 
-        public int SubcategoryId { get; set; }
+        public long SubcategoryId { get; set; }
 
         public Subcategory Subcategory { get; set; }
     }

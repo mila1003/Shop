@@ -1,0 +1,40 @@
+﻿/*menu panel for changing password and email*/
+#panel-password-email p {
+    text-align: center;
+    color: red;
+}
+#menu-panel {
+    width: 100%;
+}
+
+#panel-password-email {
+    margin: 10px 0;
+}
+
+    #panel-password-email .item-inner {
+        margin: 10px;
+    }
+
+.items input {
+    transform: scale(1.1);
+    box-shadow: 0 2px 5px rgba(0,0,0, .2);
+    margin: 10px;
+}
+
+    .items input[type="submit"] {
+        box-shadow: -1px 1px 6px 0px #000;
+        background: #808080;
+        padding: 3px 20px;
+        color: #FFF;
+        margin-left: 20px;
+    }
+
+details {
+    width: 50%;
+    position: relative;
+    left: 40%;
+}
+
+summary {
+    padding: 10px;
+}

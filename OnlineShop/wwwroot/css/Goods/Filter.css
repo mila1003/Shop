@@ -1,0 +1,67 @@
+﻿/*For filtration*/
+#filtration {
+    box-shadow: 0 2px 3px #808080;
+    border: 0.01em solid #ddd;
+    margin: 1%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+    #filtration form {
+        width: 100%;
+    }
+
+    #filtration #filtration-inner {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #filtration .filter {
+        width: 50%;
+        margin: 1%;
+    }
+
+.range {
+    display: flex;
+}
+
+#filtration .range input {
+    width: 45%;
+    height: 1.5em;
+    background: #fff;
+    margin-right: 1%;
+}
+
+#filtration button {
+    width: 11.2%;
+    height: 1.6em;
+    color: #fff;
+    background: #c3213c;
+}
+
+    #filtration button:hover {
+        background: #f3dde1;
+        color: #c3213c;
+    }
+
+#filtration a {
+    width: 11.2%;
+}
+
+#filtration input[type="button"] {
+    width: 100%;
+    height: 1.6em;
+    color: #fff;
+    background: #c3213c;
+}
+
+    #filtration input[type="button"]:hover {
+        background: #f3dde1;
+        color: #c3213c;
+    }
+
+#apply-filter {
+    margin: 1%;
+    display: flex;
+}
