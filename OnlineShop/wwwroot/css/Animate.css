@@ -38,8 +38,8 @@ input[type="checkbox"] {
     -ms-appearance: none;
     -o-appearance: none;
     appearance: none;
-    height: 1.6em;
-    width: 1.6em;
+    height: 1.2em;
+    width: 1.2em;
     transition: all 0.15s ease-out 0s;
     background: #cbd1d8;
     border: none;
@@ -66,9 +66,9 @@ input[type="checkbox"] {
             position: absolute;
             content: '✔';
             display: inline-block;
-            font-size: 2em;
+            font-size: 1.2em;
             text-align: center;
-            line-height: 0.9em;
+            line-height: 1.1em;
         }
 
         input[type="checkbox"]:checked::after {

@@ -20,6 +20,8 @@
     #filtration .filter {
         width: 50%;
         margin: 1%;
+        display: flex;
+        align-items: flex-end;
     }
 
 .range {
